@@ -43,6 +43,20 @@ struct ContentView: View {
             }
         }
     }
+    
+    func test() -> [String] {
+        let input = " Guillermo Ruiz Baires"
+        let names = input.components(separatedBy: " ")
+        
+        let word = "workts"
+        let checker = UITextChecker()
+        let range = NSRange(location: 0, length: word.utf16.count)
+        
+        let misspelledRage = checker.rangeOfMisspelledWord(in: word, range: range, startingAt: 0, wrap: false, language: "en")
+        
+        return names
+        
+    }
 }
 
 struct ContentView_Previews: PreviewProvider {
