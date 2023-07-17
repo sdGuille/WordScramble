@@ -8,54 +8,37 @@
 import SwiftUI
 
 struct ContentView: View {
-    private var fruits = ["Bannana", "Grape", "Apple"]
+    @State private var usedWords = [String]()
+    @State private var rootWord = ""
+    @State private var newWord = ""
     
     var body: some View {
-        /// Just for practice purpose
         NavigationStack {
             List {
-                Section("Static Section") {
-                    Text("Static Row 1")
-                    Text("Static Row 2")
+                Section {
+                    TextField("Enter your word", text: $newWord)
+                        .textInputAutocapitalization(.never)
                 }
                 
-                Section("Dynamic Section") {
-                    ForEach(1..<4) {
-                        Text("Dynamic row \($0)")
-                    }
-                }
-                
-                Section("Dynamic section with an array") {
-                    ForEach(fruits, id: \.self) {
-                        Text("I like \($0)")
+                Section {
+                    ForEach(usedWords, id: \.self) { word in
+                        Text(word)
                     }
                 }
             }
-            .listStyle(.sidebar)
-            .navigationTitle("Practicing List")
+            .navigationTitle(rootWord)
+            .onSubmit(addWord)
         }
     }
     
-    func loadFiles() {
-        if let fileURL = Bundle.main.url(forResource: "some-file", withExtension: "txt") {
-            if let fileContents = try? String(contentsOf: fileURL) {
-                fileContents
-            }
+    func addWord() {
+        let answer = newWord.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+        guard answer.count > 0 else { return }
+        
+        withAnimation {
+            usedWords.insert(answer, at: 0)
         }
-    }
-    
-    func test() -> [String] {
-        let input = " Guillermo Ruiz Baires"
-        let names = input.components(separatedBy: " ")
-        
-        let word = "workts"
-        let checker = UITextChecker()
-        let range = NSRange(location: 0, length: word.utf16.count)
-        
-        let misspelledRage = checker.rangeOfMisspelledWord(in: word, range: range, startingAt: 0, wrap: false, language: "en")
-        
-        return names
-        
+        newWord = ""
     }
 }
 
