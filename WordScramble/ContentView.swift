@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     private var fruits = ["Bannana", "Grape", "Apple"]
+    
     var body: some View {
         /// Just for practice purpose
         NavigationStack {
@@ -32,6 +33,14 @@ struct ContentView: View {
             }
             .listStyle(.sidebar)
             .navigationTitle("Practicing List")
+        }
+    }
+    
+    func loadFiles() {
+        if let fileURL = Bundle.main.url(forResource: "some-file", withExtension: "txt") {
+            if let fileContents = try? String(contentsOf: fileURL) {
+                fileContents
+            }
         }
     }
 }
