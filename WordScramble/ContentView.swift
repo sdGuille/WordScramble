@@ -15,6 +15,7 @@ struct ContentView: View {
     @State private var errorTitle = ""
     @State private var errorMessage = ""
     @State private var showingError = false
+    @State private var playerScore = 0
     
     var body: some View {
         NavigationStack {
@@ -33,7 +34,16 @@ struct ContentView: View {
                         }
                     }
                 }
+                
+                Section("User Score") {
+                    Text("\(playerScore)")
+                        .font(.title)
+                }
+
             }
+            
+//            Text("Player Score: \(playerScore)")
+//                .font(.title.bold())
             .navigationTitle(rootWord)
             .onSubmit(addWord)
             .onAppear(perform: startGame)
@@ -47,7 +57,13 @@ struct ContentView: View {
             }
         }
     }
-        
+    
+    func calculateScore() {
+        let answer = newWord.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+
+        playerScore = usedWords.count
+    }
+    
     func addWord() {
         let answer = newWord.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
         guard answer.count > 2 else {
@@ -78,6 +94,7 @@ struct ContentView: View {
         withAnimation {
             usedWords.insert(answer, at: 0)
         }
+        calculateScore()
         newWord = ""
     }
     
@@ -87,6 +104,8 @@ struct ContentView: View {
             if let startWords = try? String(contentsOf: startWordsURL) {
                 let allWords = startWords.components(separatedBy: "\n")
                 rootWord = allWords.randomElement() ?? "zelda"
+                usedWords = [String]()
+                playerScore = 0
                 return
             }
         }
